@@ -23,9 +23,13 @@ def clearinput():
     memory1 = 0
      
 def deleteinput():
-    value = int(str(en.get()).rstrip())
-    en.delete(0, END)
-    en.insert(0, value)
+    current_value = en.get()
+
+    # Remove the last character if there's any input
+    if len(current_value) > 0:
+        en.delete(0, END)
+        en.insert(0, current_value[:-1])
+
     
     
 def squarenumber():
@@ -66,18 +70,38 @@ def numberadd():
     
 def numbercalc():
     second_num = en.get()
-    en.delete(0, END)
-    if math == "addition":
-        en.insert(0, memory1 + float(second_num))
-    elif math == "division":
-        en.insert(0, memory1 / float(second_num))
-    elif math == "subtraction":
-        en.insert(0, memory1 - float(second_num))
-    elif math == "multiplication":
-        en.insert(0, memory1 * float(second_num))
-    print("value of calculation = " + en.get())
-    global answer
-    answer = en.get()
+    string_num = str(second_num)
+    num_length = len(second_num)
+    valid_chars = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "."]
+    valid = True
+
+    # Check for an invalid float
+    if num_length > 0:
+        if string_num[num_length-1] == ".":
+            second_num = 0
+            en.delete(0, END)
+            en.insert(0, 0)
+            valid = False
+
+        for char in string_num:
+            if char not in valid_chars:
+                en.delete(0, END)
+                en.insert(0, 0)
+                valid = False
+
+        if valid:
+            en.delete(0, END)
+            if math == "addition":
+                en.insert(0, memory1 + float(second_num))
+            elif math == "division":
+                en.insert(0, memory1 / float(second_num))
+            elif math == "subtraction":
+                en.insert(0, memory1 - float(second_num))
+            elif math == "multiplication":
+                en.insert(0, memory1 * float(second_num))
+            print("value of calculation = " + en.get())
+            global answer
+            answer = en.get()
         
 def numberdivide():
     first_num = en.get()
@@ -97,20 +121,13 @@ def sqrtnumber():
 def ansinput():
     en.insert(0, answer)
 
-def colourchange():
-    print("colour change")
-    randomcolour = random.randint(1,5)
-    print (randomcolour)
-    if randomcolour == "1":
-        print("1")
-
 def piinput():
     pinum = 3.141592653589793
     en.insert(0, pinum)
     
         
     
-#coding the button
+# Button Grid
 
 button1 = Button(root, text="1", padx=40, pady=20, command = lambda: numberinput(1))
 button2 = Button(root, text="2", padx=40, pady=20, command = lambda: numberinput(2))
@@ -144,8 +161,6 @@ blank2 = Label(root, padx=40, pady=20)
 
 ansbutton = Button(root, text="ans", padx=34, pady=20, command=ansinput, fg = "Blue")
 
-colourbutton = Button(root, text="colour", padx=26, pady=20, command=colourchange, fg = "Purple")
-
 pibutton = Button(root, text="π", padx=40, pady=20, command = lambda: piinput())
 
 #displaying on screen
@@ -175,7 +190,6 @@ button9.grid(row = 4, column = 2)
 
 button0.grid(row = 7, column = 0)
 buttondecpoint.grid(row = 7, column = 1)
-# blank2.grid(row = 7, column = 2)
 
 buttonmultiply.grid(row = 4, column = 3)
 buttonsubtract.grid(row = 5, column = 3)
